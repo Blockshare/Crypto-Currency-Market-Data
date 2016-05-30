@@ -1,0 +1,20 @@
+info:
+  title: 'Crypto Currency Market Price Data'
+  description: 'Get market data of Ethereum price movements.'
+  x-21-quick-buy: "$ 21 buy url http://10.244.165.43:8080/<currency>\n <currency>\n
+   \t/ether\n \t/bitcoin\n \t/litecoin\n \t/all\n Output:\n {\n \t'market_cap':\
+   '...',\n\t'name': '...',\n\t'price': '...',\n\t'supply': '...'\n\t'symbol': '...',\n\t'volume'\
+   : '...'\n}"
+  x-21-category: 'utilities'
+  x-21-app-image: '\nhttp://www.ethereumwisdom.com/img/ethereum-logo.png'
+  x-21-total-price:
+    min: 5000
+    max: 5000
+  contact:
+    name: Casey O'Neill
+    email: casey.oneill@gmail.com
+host: 10.244.165.43:8080
+schemes:
+  - http
+basePath: /
+x-21-manifest-path: /manifest
