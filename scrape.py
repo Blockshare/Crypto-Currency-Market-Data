@@ -1,147 +1,52 @@
-#!/usr/bin/env python3
-# Loading Developer Libraries
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
-import json
-import sys
+import requests, json
 
 
-def ethereum_market_price():
-	""" 
-	Scrape coinmarketcap website using Beautiful Soup and return data in json format. 
+def market_prices():
 
-	Input: url = "https://coinmarketcap.com/currencies/<currency>/
-	Ouput:
-	{
-		'name': 'currency name',
-		'symbol': 'currency symbol',
-		'price': 'currency price',
-		'market_cap': 'market capitalization',
-		'volume': 'volume',
-		'supply': 'supply'
-	}
+    btc_data = requests.get("https://api.coinmarketcap.com/v1/ticker/bitcoin")
+    eth_data = requests.get("https://api.coinmarketcap.com/v1/ticker/ethereum")
+    ltc_data = requests.get("https://api.coinmarketcap.com/v1/ticker/litecoin")
 
-	"""
+    bitcoin = btc_data.json()
+    ethereum = eth_data.json()
+    litecoin = ltc_data.json()
 
-	eth_url = "https://coinmarketcap.com/currencies/ethereum/"
-	data = urlopen(eth_url)
-	soup = BeautifulSoup(data, 'html.parser')
+    btc_params = {
+        'price': bitcoin[0]['price_usd'],
+        'symbol': bitcoin[0]['symbol'],
+        'market_cap': bitcoin[0]['market_cap_usd'],
+        'percentage_change_24h': bitcoin[0]['percent_change_24h'],
+        'volume': bitcoin[0]['24h_volume_usd']
+    }
 
-	symbol = soup.findAll(attrs={"class": "bold"})
-	symbol = symbol[0].string
+    eth_params = {
+        'price': ethereum[0]['price_usd'],
+        'symbol': ethereum[0]['symbol'],
+        'market_cap': ethereum[0]['market_cap_usd'],
+        'percentage_change_24h': ethereum[0]['percent_change_24h'],
+        'volume': ethereum[0]['24h_volume_usd']
+    }  
 
-	ether = soup.findAll(attrs={"class": "text-large"})
-	price = ether[1].string
+    ltc_params = {
+        'price': litecoin[0]['price_usd'],
+        'symbol': litecoin[0]['symbol'],
+        'market_cap': litecoin[0]['market_cap_usd'],
+        'percentage_change_24h': litecoin[0]['percent_change_24h'],
+        'volume': litecoin[0]['24h_volume_usd']
+    }
 
-	table = soup.find('table')
-	cols = table.findAll('td')
+    params = {
+        'market_prices': {
+            'bitcoin': btc_params,
+            'ethereum': eth_params,
+            'litecoin': ltc_params
+        }
+    }
 
-	market_cap = cols[0].find('small').string
-	volume = cols[1].find('small').string
-	supply = cols[2].find('small').string
+    return params
 
-	data = {
-		'name': 'ethereum',
-		'symbol': symbol,
-		'price': price,
-		'market_cap': market_cap,
-		'volume': volume,
-		'supply': supply
-	}
-
-	return data
-
-def bitcoin_market_price():
-	""" 
-	Scrape coinmarketcap website using Beautiful Soup and return data in json format. 
-
-	Input: url = "https://coinmarketcap.com/currencies/<currency>/
-	Ouput:
-	{
-		'name': 'currency name',
-		'symbol': 'currency symbol',
-		'price': 'currency price',
-		'market_cap': 'market capitalization',
-		'volume': 'volume',
-		'supply': 'supply'
-	}
-
-	"""
-
-	url = "https://coinmarketcap.com/currencies/bitcoin/"
-	data = urlopen(url)
-	soup = BeautifulSoup(data, 'html.parser')
-
-	symbol = soup.findAll(attrs={"class": "bold"})
-	symbol = symbol[0].string
-
-	bitcoin = soup.findAll(attrs={"class": "text-large"})
-	price = bitcoin[1].string
-
-	table = soup.find('table')
-	cols = table.findAll('td')
-
-	market_cap = cols[0].find('small').string
-	volume = cols[1].find('small').string
-	supply = cols[2].find('small').string
-	
-	data = {
-		'name': 'bitcoin',
-		'symbol': symbol,
-		'price': price,
-		'market_cap': market_cap,
-		'volume': volume,
-		'supply': supply
-	}
-
-	return data
-
-def litecoin_market_price():
-	""" 
-	Scrape coinmarketcap website using Beautiful Soup and return data in json format. 
-
-	Input: url = "https://coinmarketcap.com/currencies/<currency>/
-	Ouput:
-	{
-		'name': 'currency name',
-		'symbol': 'currency symbol',
-		'price': 'currency price',
-		'market_cap': 'market capitalization',
-		'volume': 'volume',
-		'supply': 'supply'
-	}
-
-	"""
-
-	url = "https://coinmarketcap.com/currencies/litecoin/"
-	data = urlopen(url)
-	soup = BeautifulSoup(data, 'html.parser')
-
-	symbol = soup.findAll(attrs={"class": "bold"})
-	symbol = symbol[0].string
-
-	litecoin = soup.findAll(attrs={"class": "text-large"})
-	price = litecoin[1].string
-
-	table = soup.find('table')
-	cols = table.findAll('td')
-
-	market_cap = cols[0].find('small').string
-	volume = cols[1].find('small').string
-	supply = cols[2].find('small').string
-
-	data = {
-		'name': 'litecoin',
-		'symbol': symbol,
-		'price': price,
-		'market_cap': market_cap,
-		'volume': volume,
-		'supply': supply
-	}
-
-	return data
 
 if __name__=='__main__':
-	data = ethereum_market_price(), bitcoin_market_price(), litecoin_market_price()
-	market_data = json.dumps(data, indent=4, sort_keys=True)
-	print(market_data)
+    data = market_prices()
+    market_data = json.dumps(data, indent=2, sort_keys=True)
+    print(market_data)

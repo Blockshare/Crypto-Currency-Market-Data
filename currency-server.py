@@ -16,7 +16,7 @@ wallet = Wallet()
 payment = Payment(app, wallet)
 
 # Import market price funtions from scrape.py
-from scrape import ethereum_market_price, bitcoin_market_price, litecoin_market_price
+from scrape import market_prices
 
 # hide logging
 log = logging.getLogger('werkzeug')
@@ -32,6 +32,17 @@ def manifest():
     return json.dumps(manifest)
 
 
+@app.route('/market-data')
+@payment.required(2500)
+def market():
+
+    try:
+        data = market_prices()
+        response = json.dumps(data, indent=2, sort_keys=True)
+        return response
+    except ValueError as e:
+        return 'HTTP Status 400 {}'.format(e.args[0]), 400
+"""
 # machine payable endpoint (402-endpoint) for json output of ether market data
 @app.route('/ether')
 @payment.required(5000)
@@ -80,7 +91,7 @@ def currency():
 		return response
 	except ValueError as e:
 		return 'HTTP Status 400 {}'.format(e.args[0]), 400
-
+"""
 if __name__ == '__main__':
     if 'daemon' not in sys.argv:
         pid_file = './scrape.pid'
@@ -100,4 +111,4 @@ if __name__ == '__main__':
     else:
         print ("Server running...")
         print('You had better catch it ... ')
-        app.run(host='0.0.0.0', port=8080)
+        app.run(host='0.0.0.0', port=8008)
