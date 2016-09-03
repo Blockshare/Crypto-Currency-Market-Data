@@ -42,56 +42,7 @@ def market():
         return response
     except ValueError as e:
         return 'HTTP Status 400 {}'.format(e.args[0]), 400
-"""
-# machine payable endpoint (402-endpoint) for json output of ether market data
-@app.route('/ether')
-@payment.required(5000)
-def ether():
 
-	try:
-		data = ethereum_market_price()
-		response = json.dumps(data, indent=4, sort_keys=True)
-		return response
-	except ValueError as e:
-		return 'HTTP Status 400 {}'.format(e.args[0]), 400
-
-
-# machine payable endpoint (402-endpoint) for json output of bitcoin market data
-@app.route('/bitcoin')
-@payment.required(5000)
-def bitcoin():
-
-	try:
-		data = bitcoin_market_price()
-		response = json.dumps(data, indent=4, sort_keys=True)
-		return response
-	except ValueError as e:
-		return 'HTTP Status 400 {}'.format(e.args[0]), 400
-
-# machine payable endpoint (402-endpoint) for json output of litecoin market data
-@app.route('/litecoin')
-@payment.required(5000)
-def litecoin():
-
-	try:
-		data = litecoin_market_price()
-		response = json.dumps(data, indent=4, sort_keys=True)
-		return response
-	except ValueError as e:
-		return 'HTTP Status 400 {}'.format(e.args[0]), 400
-
-# machine payable endpoint (402-endpoint) for json output for all market data being collected
-@app.route('/all')
-@payment.required(10000)
-def currency():
-
-	try:
-		data = ethereum_market_price(), bitcoin_market_price(), litecoin_market_price()
-		response = json.dumps(data, indent=4, sort_keys=True)
-		return response
-	except ValueError as e:
-		return 'HTTP Status 400 {}'.format(e.args[0]), 400
-"""
 if __name__ == '__main__':
     if 'daemon' not in sys.argv:
         pid_file = './scrape.pid'
